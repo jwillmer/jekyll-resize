@@ -7,23 +7,23 @@ module Jekyll
     HASH_LENGTH = 32
 
     # Generate output image filename.
-    def _dest_filename(src_path, options, dest_dir)
+    def _dest_filename(src_path, dest_dir, resize_option, imageFormat)
       hash = Digest::SHA256.file(src_path)
       short_hash = hash.hexdigest()[0, HASH_LENGTH]
-      options_slug = options.gsub(/[^\da-z]+/i, "")
-      ext = File.extname(src_path)
+      options_slug = resize_option.gsub(/[^\da-z]+/i, "")
+      ext = imageFormat && !imageFormat.empty? ? ".#{imageFormat}" : File.extname(src_path)
 
       "#{short_hash}_#{options_slug}#{ext}"
     end
 
     # Build the path strings.
-    def _paths(repo_base, img_path, options)
+    def _paths(repo_base, img_path, resize_option, imageFormat)
       src_path = File.join(repo_base, img_path)
       raise "Image at #{src_path} is not readable" unless File.readable?(src_path)
 
       dest_dir = File.join(repo_base, CACHE_DIR)
 
-      dest_filename = _dest_filename(src_path, options, dest_dir)
+      dest_filename = _dest_filename(src_path, dest_dir, resize_option, imageFormat)
 
       dest_path = File.join(dest_dir, dest_filename)
       dest_path_rel = File.join(CACHE_DIR, dest_filename)
@@ -37,12 +37,20 @@ module Jekyll
     end
 
     # Read, process, and write out as new image.
-    def _process_img(src_path, options, dest_path)
+    def _process_img(src_path, dest_path, resize_option, imageFormat = nil, imageQuality = nil)
       image = MiniMagick::Image.open(src_path)
 
       image.auto_orient
-      image.resize options
+      image.resize resize_option
       image.strip
+      
+      if imageFormat.is_a?(String) && !imageFormat.empty?
+        image.format(imageFormat)
+      end
+  
+      if imageQuality.is_a?(Integer) && imageQuality.between?(1, 100)
+        image.quality(imageQuality.to_s)
+      end
 
       image.write dest_path
     end
@@ -61,14 +69,20 @@ module Jekyll
 
       site = @context.registers[:site]
 
-      src_path, dest_path, dest_dir, dest_filename, dest_path_rel = _paths(site.source, source, options)
+      # Split the options string into individual components
+      options_array = options.split(',')
+      resize_option = options_array[0] # Always present
+      imageFormat = options_array[1] # Optional
+      imageQuality = options_array[2] ? options_array[2].to_i : nil # Optional
+
+      src_path, dest_path, dest_dir, dest_filename, dest_path_rel = _paths(site.source, source, resize_option, imageFormat)
 
       FileUtils.mkdir_p(dest_dir)
 
       if _must_create?(src_path, dest_path)
-        puts "Resizing '#{source}' to '#{dest_path_rel}' - using options: '#{options}'"
+        puts "Resizing '#{source}' to '#{dest_path_rel}' - using resize option: '#{resize_option}'#{", format: #{imageFormat}" if imageFormat}#{", quality: #{imageQuality}" if imageQuality}"
 
-        _process_img(src_path, options, dest_path)
+        _process_img(src_path, dest_path, resize_option, imageFormat, imageQuality)
 
         site.static_files << Jekyll::StaticFile.new(site, site.source, CACHE_DIR, dest_filename)
       end

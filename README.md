@@ -20,6 +20,24 @@ end
 
 The `resize` filter will be available in Liquid (in your Markdown and HTML) so you can use it for a JPEG or PNG file.
 
+Here we resize an image to max width and max height of 800 pixels and converting it to webp with an image quality of 80:
+
+```liquid
+{{ "my-image.png" | resize: "800x800>,webp,80" }}
+```
+
+Here we resize an image to max width and max height of 800 pixels with an image quality of 80:
+
+```liquid
+{{ "my-image.png" | resize: "800x800>,,80" }}
+```
+
+Here we resize an image to max width and max height of 800 pixels and converting it to webp:
+
+```liquid
+{{ "my-image.png" | resize: "800x800>,webp" }}
+```
+
 Here we resize an image to max width and max height of 800 pixels:
 
 ```liquid
