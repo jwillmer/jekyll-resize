@@ -10,7 +10,7 @@ module Jekyll
     def _dest_filename(src_path, dest_dir, resize_option, imageFormat)
       base_name = File.basename(src_path, File.extname(src_path))
       options_slug = resize_option.gsub(/[^\da-z]+/i, "")
-      ext = imageFormat ? ".#{imageFormat}" : File.extname(src_path)
+      ext = imageFormat && !imageFormat.empty? ? ".#{imageFormat}" : File.extname(src_path)
 
       "#{base_name}_#{options_slug}#{ext}"
     end
