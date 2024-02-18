@@ -30,7 +30,7 @@ Note that the install URL in step 2 points to this fork repo on GH and not to Ru
 1. Add `jekyll-resize` to your project's `Gemfile` using a GitHub URL.
     ```ruby
     group :jekyll_plugins do
-      gem "jekyll-resize", git: "https://github.com/MichaelCurrin/jekyll-resize"
+      gem "jekyll-resize", git: "https://github.com/jwillmer/jekyll-resize"
     end
     ```
 1. Install your project's gems.

@@ -6,7 +6,7 @@
 Clone the repo.
 
 ```sh
-$ git clone git@github.com:MichaelCurrin/jekyll-resize.git
+$ git clone git@github.com:jwillmer/jekyll-resize.git
 $ cd jekyll-resize
 ```
 

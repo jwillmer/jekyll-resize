@@ -15,6 +15,8 @@ This project was forked from the [CloudCannon/jekyll-resize](https://github.com/
         - Reworded "Thumbnailing" to "Resizing", because this doesn't have to be used to make thumbnails (which are very small).
         - Reduced hash from 64 to 32 characters long (who needs 64 anyway?).
         - Added validation on plugin inputs as non-empty strings, to avoid errors later.
+        - Option to define output image format
+        - Option to define output quality
     - Refactor
         - Created functions to break up the logic.
         - Changed variable names and order of lines.

@@ -3,7 +3,6 @@
 
 - [Features](features.md)
 - [Use-cases](use-cases.md)
-- [Demo](demo.md)
 - [Installation](installation.md)
 - [Usage](usage.md)
 - [Development](development.md)
