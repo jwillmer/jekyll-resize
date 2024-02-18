@@ -8,12 +8,11 @@ module Jekyll
 
     # Generate output image filename.
     def _dest_filename(src_path, dest_dir, resize_option, imageFormat)
-      hash = Digest::SHA256.file(src_path)
-      short_hash = hash.hexdigest()[0, HASH_LENGTH]
+      base_name = File.basename(src_path, File.extname(src_path))
       options_slug = resize_option.gsub(/[^\da-z]+/i, "")
       ext = imageFormat ? ".#{imageFormat}" : File.extname(src_path)
 
-      "#{short_hash}_#{options_slug}#{ext}"
+      "#{base_name}_#{options_slug}#{ext}"
     end
 
     # Build the path strings.
